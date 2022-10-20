@@ -11,6 +11,7 @@ public class Gameplay
     private readonly IScore _score;
     private readonly ITimer _timer;
     private readonly GameController _controller;
+    private Node _prevNode;
 
     public Gameplay(Graph graph, BoardVisual boardVisual, IScore score, ITimer timer, GameController controller)
     {
@@ -42,14 +43,22 @@ public class Gameplay
         }
     }
 
-    public void CorrectMove()
+    public void CorrectMove(Node node)
     {
         var nodes = _boardVisual.Buttons.Where(b => b.Node.Condition.IsCorrect());
-        var finished = nodes.All(b => b.Node.Selector.Selected);
+        var finished = nodes.Count(b => b.Node.Selector.Selected) == _controller.correctAnswerNum;
         if (finished)
         {
             Finish();
         }
+
+        if (_prevNode != null)
+        {
+            var line = _boardVisual.GetLine(_boardVisual.Buttons[GraphHelper.GetIndexInArray(_graph, _prevNode)], _boardVisual.Buttons[GraphHelper.GetIndexInArray(_graph, node)]);
+            line?.SetCorrect(true);
+        }
+
+        _prevNode = node;
     }
 
     public void WrongMove()
@@ -65,8 +74,14 @@ public class Gameplay
     {
         Debug.Log("Win");
         _timer.StopTimer();
-        _controller.Stop();
-        _controller.ShowResultYouWin(_score.Score, _timer.Time);
+        _controller.PlayFX();
+        RayPointer.Instance.Interactable = false;
+        _boardVisual.StartCoroutine(Delay(1f, () =>
+        {
+            _controller.Stop();
+            _controller.ShowResultYouWin(_score.Score, _timer.Time);
+            RayPointer.Instance.Interactable = true;
+        }));
     }
 
     public void ShowYouLoseTimeOut()
@@ -97,10 +112,17 @@ public class Gameplay
         {
             Selected = true;
 
-            if (node.Condition.IsCorrect())
+            var ok = true;
+            if (_gameplay._prevNode != null)
+            {
+                var line = _gameplay._boardVisual.GetLine(_gameplay._boardVisual.Buttons[GraphHelper.GetIndexInArray(_gameplay._graph, _gameplay._prevNode)], _gameplay._boardVisual.Buttons[GraphHelper.GetIndexInArray(_gameplay._graph, node)]);
+                ok = line != null;
+            }
+
+            if (node.Condition.IsCorrect() && ok)
             {
                 _gameplay._boardVisual.EnableNextNodes(node);
-                _gameplay.CorrectMove();
+                _gameplay.CorrectMove(node);
                 _gameplay._controller.girl.position = _gameplay._boardVisual
                     .Buttons[GraphHelper.GetIndexInArray(_gameplay._graph, node)].transform.position;
             }

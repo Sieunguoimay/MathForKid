@@ -5,6 +5,7 @@ using UnityEngine;
 public class BoardVisual : MonoBehaviour
 {
     [SerializeField] private NodeVisual buttonPrefab;
+    [SerializeField] private Line linePrefab;
     [SerializeField] private float spacing;
 
     private Graph _graph;
@@ -16,11 +17,16 @@ public class BoardVisual : MonoBehaviour
 
     [field: NonSerialized] public NodeVisual[] Buttons { get; private set; }
 
+    [field: System.NonSerialized] public Line[] Lines { get; private set; }
+
     public void Setup(Graph graph)
     {
         _graph = graph;
-        SpawnButtons(graph.ColumnNum, graph.RowNum);
+        _row = graph.RowNum;
+        _column = graph.ColumnNum;
+        SpawnButtons();
         PositionButtons(spacing);
+        SpawnLines();
         //Setup buttons
         for (var i = 0; i < _column; i++)
         {
@@ -31,16 +37,46 @@ public class BoardVisual : MonoBehaviour
         }
     }
 
-    public void SpawnButtons(int column, int row)
+    public void SpawnButtons()
     {
-        _row = row;
-        _column = column;
         Buttons = new NodeVisual[_column * _row];
         for (var i = 0; i < _column; i++)
         {
             for (var j = 0; j < _row; j++)
             {
                 Buttons[_row * i + j] = Instantiate(buttonPrefab, transform);
+            }
+        }
+    }
+
+    public void SpawnLines()
+    {
+        var firstHalf = (_column) * (_row - 1);
+        var secondHalf = (_column - 1) * (_row);
+        Lines = new Line[firstHalf + secondHalf];
+        for (var i = 0; i < _column; i++)
+        {
+            for (var j = 0; j < _row - 1; j++)
+            {
+                var point1 = Buttons[i * _row + j].transform.position;
+                var point2 = Buttons[i * _row + j + 1].transform.position;
+                Lines[i * (_row - 1) + j] = Instantiate(linePrefab, transform);
+                Lines[i * (_row - 1) + j].SetEndPoints(point1, point2);
+                Lines[i * (_row - 1) + j].Node1 = Buttons[i * _row + j];
+                Lines[i * (_row - 1) + j].Node2 = Buttons[i * _row + j + 1];
+            }
+        }
+
+        for (var i = 0; i < _row; i++)
+        {
+            for (var j = 0; j < _column - 1; j++)
+            {
+                var point1 = Buttons[j * _row + i].transform.position;
+                var point2 = Buttons[(j + 1) * _row + i].transform.position;
+                Lines[firstHalf + i * (_column - 1) + j] = Instantiate(linePrefab, transform);
+                Lines[firstHalf + i * (_column - 1) + j].SetEndPoints(point1, point2);
+                Lines[firstHalf + i * (_column - 1) + j].Node1 = Buttons[j * _row + i];
+                Lines[firstHalf + i * (_column - 1) + j].Node2 = Buttons[(j + 1) * _row + i];
             }
         }
     }
@@ -73,6 +109,7 @@ public class BoardVisual : MonoBehaviour
             }
         }
 
+        // var moves = Buttons.Select(b => b.Node);
         var moves = GraphHelper.GetNextMoveNodes(_graph, node.ColumnIndex, node.RowIndex);
         foreach (var index in from move in moves
             where !move.Selector.Selected
@@ -81,5 +118,10 @@ public class BoardVisual : MonoBehaviour
             Buttons[index].PlayBounceAnim();
             Buttons[index].SetSelectable(true);
         }
+    }
+
+    public Line GetLine(NodeVisual a, NodeVisual b)
+    {
+        return Lines.FirstOrDefault(l => (l.Node1 == a && l.Node2 == b) || (l.Node1 == b && l.Node2 == a));
     }
 }

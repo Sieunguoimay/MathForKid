@@ -406,6 +406,49 @@ MonoBehaviour:
   market: {fileID: 8409402822832870779}
   col: 6
   row: 3
+  table:
+  - items:
+    - value: 522
+      isCorrect: 0
+    - value: 
+      isCorrect: 1
+    - value: 27
+      isCorrect: 0
+  - items:
+    - value: 37
+      isCorrect: 0
+    - value: 18
+      isCorrect: 1
+    - value: 54
+      isCorrect: 0
+  - items:
+    - value: 576
+      isCorrect: 1
+    - value: 216
+      isCorrect: 1
+    - value: 232
+      isCorrect: 0
+  - items:
+    - value: 3690
+      isCorrect: 1
+    - value: 2022
+      isCorrect: 0
+    - value: 96
+      isCorrect: 0
+  - items:
+    - value: 8712
+      isCorrect: 1
+    - value: 10^9+8
+      isCorrect: 1
+    - value: 324
+      isCorrect: 1
+  - items:
+    - value: 2^3.3^2
+      isCorrect: 0
+    - value: 415
+      isCorrect: 0
+    - value: 
+      isCorrect: 1
 --- !u!1 &6249221816602208857
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,6 +781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonPrefab: {fileID: 4066513604440852861, guid: 34bbfcc11b4c7e944bf4c63d8139f43f, type: 3}
+  linePrefab: {fileID: 9079659324659016831, guid: 98c336daa3dd7c5458dbfcc3c1c63369, type: 3}
   spacing: 1.5
 --- !u!1 &7924591592543975716
 GameObject:

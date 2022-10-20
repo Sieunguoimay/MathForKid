@@ -129,6 +129,33 @@ public static class GraphGenerator
         return graph;
     }
 
+    public static Graph GenerateGraphWithFixedTable(GameplayMono.ItemArray[] table)
+    {
+        var graph = new Graph
+        {
+            Columns = new Column[table.Length],
+            RowNum = table[0].items.Length,
+            ColumnNum = table.Length
+        };
+
+        for (var col = 0; col < table.Length; col++)
+        {
+            graph.Columns[col] = new Column() {Nodes = new Node[graph.RowNum]};
+            for (var row = 0; row < table[col].items.Length; row++)
+            {
+                var isTrue = table[col].items[row].isCorrect;
+                graph.Columns[col].Nodes[row] = new Node
+                {
+                    Number = table[col].items[row].value,
+                    Condition = isTrue ? new TrueCondition() : new FalseCondition(),
+                    RowIndex = row, ColumnIndex = col
+                };
+            }
+        }
+
+        return graph;
+    }
+
     public static void LogGraph(Graph graph)
     {
         var str = "";

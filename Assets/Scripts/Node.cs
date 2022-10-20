@@ -1,6 +1,6 @@
 ﻿public class Node
 {
-    public int Number;
+    public object Number;
     public ICondition Condition;
     public int RowIndex;
     public int ColumnIndex;

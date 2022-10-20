@@ -114,6 +114,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   selfSetup: 1
+  button: {fileID: 8300000, guid: 676d8f33ed838f04296e5bf2493281b1, type: 3}
   size: {x: 1, y: 1, z: 1}
 --- !u!114 &4066513604440852861
 MonoBehaviour:

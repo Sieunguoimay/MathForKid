@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class RayPointer : Singleton<RayPointer>
 {
     private readonly List<IRaycastTarget> _listeners = new();
     private Camera _camera;
+    
+    public bool Interactable { get; set; }
 
     private void Start()
     {
         SetCamera(Camera.main);
+        Interactable = true;
     }
 
     public void SetCamera(Camera cam)
@@ -20,6 +24,7 @@ public class RayPointer : Singleton<RayPointer>
     public void Reset()
     {
         _listeners.Clear();
+        Interactable = true;
     }
 
     public void Register(IRaycastTarget target)
@@ -34,6 +39,7 @@ public class RayPointer : Singleton<RayPointer>
 
     public void Update()
     {
+        if (!Interactable) return;
         if (Input.GetMouseButtonUp(0))
         {
             ProcessMouse(Input.mousePosition);

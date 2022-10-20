@@ -5,6 +5,7 @@ public abstract class ABoundsClicker : MonoBehaviour, RayPointer.IRaycastTarget
 {
     [SerializeField] private UnityEvent click;
     [SerializeField] private bool selfSetup = true;
+    [SerializeField] private AudioClip button;
 
     public UnityEvent Clicked => click;
     public abstract Bounds Bounds { get; }
@@ -51,6 +52,7 @@ public abstract class ABoundsClicker : MonoBehaviour, RayPointer.IRaycastTarget
     public void OnHit(Ray ray, float distance)
     {
         click?.Invoke();
+        AudioPlayer.Instance.Play(button);
     }
 }
 
