@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/modules.xml
+/projectSettingsUpdater.xml
+/contentModel.xml
+/.idea.MathForKid.iml
+# Datasource local storage ignored files
+/../../../../../../../../:\Vuduydu\CodingSpace\Unity\MathForKid\.idea\.idea.MathForKid\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
